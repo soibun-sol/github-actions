@@ -1,0 +1,31 @@
+name: Run Cypress Test
+on: 
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  tet:
+    runs-on: ubuntu-latest
+    
+    steps:
+      -name: Checkout Code
+       uses: actions/checkout@v2
+
+      -name: Install Node
+       uses: actions/setup-node@v3
+       with:
+         node-version: '16'
+      
+      -name: Install Dependencies
+        run: npm install
+
+      -name: Run Cypress Test
+        run: npx cypress run
+
+      -name: Upload Cypress artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-results
+          path: cypress/videos
